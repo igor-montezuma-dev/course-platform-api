@@ -1,18 +1,45 @@
 package com.montezumadev.coursesplatformapi.entity;
 
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Entity
+@Table(name = "students")
 public class Student {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "student_id", nullable = false)
     private Long studentId;
+    @Basic
+    @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
+    @Basic
+    @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
+    @Basic
+    @Column(name = "level", nullable = false, length = 64)
     private String level;
 
+    @ManyToMany(mappedBy = "students", fetch = FetchType.LAZY)
     private Set<Course> courses = new HashSet<>();
 
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
     public Student() {
